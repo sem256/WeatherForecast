@@ -33,19 +33,22 @@ namespace WeatherForecast.Controllers
         {
             var param = $"weather?q={city ?? _currentCity}&appid={_apiKey}";
             var path = $"{_url}{param}";
-
-            return await GetWeatheAsync(path);
+            var result = await GetWeatheAsync(path);
+            if (result == null)
+                return "Error :( Use correct url";
+            return result;
         }
 
         async Task<string> GetWeatheAsync(string path)
         {
-            string product = null;
+            string result = null;
             HttpResponseMessage response = await client.GetAsync(path);
             if (response.IsSuccessStatusCode)
             {
-                product = await response.Content.ReadAsStringAsync();
+                result = await response.Content.ReadAsStringAsync();
             }
-            return product;
+
+            return result;
         }
     }
 }
